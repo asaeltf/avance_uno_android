@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_popular_24"
+        android:title="@string/popular_movies"/>
+    <item
+        android:id="@+id/topFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_hot_24"
+        android:title="@string/top_movies"/>
+    <item
+        android:id="@+id/animationFragment"
+        android:enabled="true"
+        android:icon="@drawable/ic_animation_24"
+        android:title="@string/animation_movies"/>
+</menu>
