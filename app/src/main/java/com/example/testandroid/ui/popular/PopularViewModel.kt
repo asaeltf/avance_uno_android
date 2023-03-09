@@ -16,31 +16,31 @@ import javax.inject.Inject
 class PopularViewModel @Inject constructor (private val repository: MovieRepository) : ViewModel() {
     private var currentPage = 1
 
-    private val _topMovies = MutableLiveData<Resource<List<MovieEntity>>>()
-    val topMovies: LiveData<Resource<List<MovieEntity>>> = _topMovies
+    private val _popularMovies = MutableLiveData<Resource<List<MovieEntity>>>()
+    val popularMovies: LiveData<Resource<List<MovieEntity>>> = _popularMovies
 
     init {
         loadNextPage()
     }
     fun loadNextPage() {
-        _topMovies.value = Resource.loading(null)
+        _popularMovies.value = Resource.loading(null)
 
         viewModelScope.launch {
-            val result = repository.getTopRatedMovies(currentPage)
+            val result = repository.getPopularMovies(currentPage)
 
             result.observeForever { response ->
                 when (response.resourceStatus) {
                     ResourceStatus.SUCCESS -> {
 
                         val newList = response.data!!
-                        _topMovies.value = Resource.success(newList)
+                        _popularMovies.value = Resource.success(newList)
                         currentPage++
                     }
                     ResourceStatus.ERROR -> {
-                        _topMovies.value = Resource.error(response.message ?: "Error desconocido", null)
+                        _popularMovies.value = Resource.error(response.message ?: "Error desconocido", null)
                     }
                     ResourceStatus.LOADING -> {
-                        _topMovies.value = Resource.loading(null)
+                        _popularMovies.value = Resource.loading(null)
                     }
                 }
             }
