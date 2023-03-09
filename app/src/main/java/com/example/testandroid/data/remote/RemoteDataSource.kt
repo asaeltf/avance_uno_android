@@ -9,5 +9,5 @@ class RemoteDataSource @Inject constructor(private val apiServices: ApiService) 
 
     suspend fun getActionsMovies() = getResult { apiServices.getActionsMovies(Const.API_KEY, Const.ACTION) }
 
-    suspend fun getTopRatedMovies() = getResult { apiServices.getTopRatedMovies(Const.API_KEY) }
+    suspend fun getTopRatedMovies(page:Int) = getResult { apiServices.getTopRatedMovies(Const.API_KEY, page) }
 }

@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testandroid.R
 import com.example.testandroid.data.entities.MovieEntity
 import com.example.testandroid.data.model.Movie
@@ -28,6 +29,7 @@ class TopFragment : Fragment(), TopMovieItemAdapter.OnMovieClickListener {
     private var _binding: FragmentTopBinding? = null
 
     private val binding get() = _binding!!
+    private var loading = true
 
     private val viewModel: TopViewModel by navGraphViewModels(R.id.nav_graph) {
         defaultViewModelProviderFactory
@@ -49,8 +51,24 @@ class TopFragment : Fragment(), TopMovieItemAdapter.OnMovieClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvMovies2.layoutManager = LinearLayoutManager(context)
+        val recyclerView = binding.rvMovies2
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val visibleItemCount = layoutManager.childCount
+                val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-        viewModel.fetchTopMovies.observe(viewLifecycleOwner, Observer {
+                if (visibleItemCount + firstVisibleItem >= totalItemCount && firstVisibleItem >= 0 && loading) {
+                    loading = true
+                    Log.e("fetchPopularMovies", "El usuario llego al final de la lista y scroll")
+                    viewModel.loadNextPage()
+                }
+            }
+        })
+
+        viewModel.topMovies.observe(viewLifecycleOwner, Observer {
             when (it.resourceStatus) {
                 ResourceStatus.LOADING -> {
                     Log.e("fetchTopMovies", "Loading")
