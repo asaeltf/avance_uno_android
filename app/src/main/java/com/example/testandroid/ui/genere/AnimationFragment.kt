@@ -16,6 +16,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.testandroid.R
 import com.example.testandroid.data.entities.MovieEntity
 import com.example.testandroid.data.model.Movie
@@ -31,7 +32,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class AnimationFragment : Fragment(), AnimationMovieItemAdapter.OnMovieClickListener {
 
     private var _binding: FragmentAnimationBinding? = null
-
+    private var loading = true
     private val binding get() = _binding!!
 
     private val viewModel: AnimationViewModel by navGraphViewModels(R.id.nav_graph) {
@@ -54,8 +55,24 @@ class AnimationFragment : Fragment(), AnimationMovieItemAdapter.OnMovieClickList
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvMovies3.layoutManager = LinearLayoutManager(context)
+        val recyclerView = binding.rvMovies3
+        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val layoutManager = recyclerView.layoutManager as LinearLayoutManager
+                val totalItemCount = layoutManager.itemCount
+                val visibleItemCount = layoutManager.childCount
+                val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
-        viewModel.fetchAnimationMovies.observe(viewLifecycleOwner, Observer {
+                if (visibleItemCount + firstVisibleItem >= totalItemCount && firstVisibleItem >= 0 && loading) {
+                    loading = true
+                    Log.e("fetchPopularMovies", "El usuario llego al final de la lista y scroll")
+                    viewModel.loadNextPage()
+                }
+            }
+        })
+
+        viewModel.animationMovies.observe(viewLifecycleOwner, Observer {
             when (it.resourceStatus) {
                 ResourceStatus.LOADING -> {
                     Log.e("fetchTopMovies", "Loading")
@@ -80,7 +97,7 @@ class AnimationFragment : Fragment(), AnimationMovieItemAdapter.OnMovieClickList
     }
 
     override fun onMovieClick(movieEntity: MovieEntity) {
-        val action = TopFragmentDirections.actionTopFragmentToDetailFragment(movieEntity)
+        val action = AnimationFragmentDirections.actionAnimationFragmentToDetailFragment(movieEntity)
         findNavController().navigate(action)
     }
 }

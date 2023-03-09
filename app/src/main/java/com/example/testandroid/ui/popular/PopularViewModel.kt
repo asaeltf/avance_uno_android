@@ -25,23 +25,19 @@ class PopularViewModel @Inject constructor (private val repository: MovieReposit
     fun loadNextPage() {
         _popularMovies.value = Resource.loading(null)
 
-        viewModelScope.launch {
-            val result = repository.getPopularMovies(currentPage)
-
-            result.observeForever { response ->
-                when (response.resourceStatus) {
-                    ResourceStatus.SUCCESS -> {
-                        val oldList = _popularMovies.value?.data ?: emptyList()
-                        val newList = oldList + response.data!!
-                        _popularMovies.value = Resource.success(newList)
-                        currentPage++
-                    }
-                    ResourceStatus.ERROR -> {
-                        _popularMovies.value = Resource.error(response.message ?: "Error desconocido", null)
-                    }
-                    ResourceStatus.LOADING -> {
-                        _popularMovies.value = Resource.loading(null)
-                    }
+        repository.getPopularMovies(currentPage).observeForever { result ->
+            when (result.resourceStatus) {
+                ResourceStatus.SUCCESS -> {
+                    val oldList = _popularMovies.value?.data ?: emptyList()
+                    val newList = result.data!!
+                    _popularMovies.value = Resource.success(newList)
+                    currentPage++
+                }
+                ResourceStatus.ERROR -> {
+                    _popularMovies.value = Resource.error(result.message!!, null)
+                }
+                ResourceStatus.LOADING -> {
+                    _popularMovies.value = Resource.loading(null)
                 }
             }
         }

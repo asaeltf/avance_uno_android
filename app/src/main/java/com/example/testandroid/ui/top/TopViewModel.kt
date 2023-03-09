@@ -30,8 +30,8 @@ class TopViewModel @Inject constructor (private val repository: MovieRepository)
             result.observeForever { response ->
                 when (response.resourceStatus) {
                     ResourceStatus.SUCCESS -> {
-                        val oldList = _topMovies.value?.data ?: emptyList()
-                        val newList = oldList + response.data!!
+
+                        val newList = response.data!!
                         _topMovies.value = Resource.success(newList)
                         currentPage++
                     }
