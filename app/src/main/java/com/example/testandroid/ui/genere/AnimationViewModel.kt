@@ -25,7 +25,7 @@ class AnimationViewModel @Inject constructor (private val repository: MovieRepos
         _animationMovies.value = Resource.loading(null)
 
         viewModelScope.launch {
-            val result = repository.getTopRatedMovies(currentPage)
+            val result = repository.getActionsMovies(currentPage)
 
             result.observeForever { response ->
                 when (response.resourceStatus) {
