@@ -74,12 +74,8 @@ class PopularFragment : Fragment(), PopularMovieItemAdapter.OnMovieClickListener
                 }
                 ResourceStatus.SUCCESS  -> {
                     Log.e("fetchPopularMovies", "Success")
-                    if (::popularMovieItemAdapter.isInitialized) {
-                        binding.rvMovies.adapter = popularMovieItemAdapter
-                    } else {
-                        popularMovieItemAdapter = PopularMovieItemAdapter(it.data!!, this@PopularFragment)
-                        binding.rvMovies.adapter = popularMovieItemAdapter
-                    }
+                    popularMovieItemAdapter = PopularMovieItemAdapter(it.data!!, this@PopularFragment)
+                    binding.rvMovies.adapter = popularMovieItemAdapter
 
                 }
                 ResourceStatus.ERROR -> {

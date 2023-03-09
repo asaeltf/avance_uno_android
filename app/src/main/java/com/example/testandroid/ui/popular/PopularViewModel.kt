@@ -16,34 +16,34 @@ import javax.inject.Inject
 class PopularViewModel @Inject constructor (private val repository: MovieRepository) : ViewModel() {
     private var currentPage = 1
 
-    private val _popularMovies = MutableLiveData<Resource<List<MovieEntity>>>()
-    val popularMovies: LiveData<Resource<List<MovieEntity>>> = _popularMovies
+    private val _topMovies = MutableLiveData<Resource<List<MovieEntity>>>()
+    val topMovies: LiveData<Resource<List<MovieEntity>>> = _topMovies
 
     init {
         loadNextPage()
     }
     fun loadNextPage() {
-        _popularMovies.value = Resource.loading(null)
+        _topMovies.value = Resource.loading(null)
 
-        repository.getPopularMovies(currentPage).observeForever { result ->
-            when (result.resourceStatus) {
-                ResourceStatus.SUCCESS -> {
-                    val oldList = _popularMovies.value?.data ?: emptyList()
-                    val newList = result.data!!
-                    _popularMovies.value = Resource.success(newList)
-                    currentPage++
-                }
-                ResourceStatus.ERROR -> {
-                    _popularMovies.value = Resource.error(result.message!!, null)
-                }
-                ResourceStatus.LOADING -> {
-                    _popularMovies.value = Resource.loading(null)
+        viewModelScope.launch {
+            val result = repository.getTopRatedMovies(currentPage)
+
+            result.observeForever { response ->
+                when (response.resourceStatus) {
+                    ResourceStatus.SUCCESS -> {
+
+                        val newList = response.data!!
+                        _topMovies.value = Resource.success(newList)
+                        currentPage++
+                    }
+                    ResourceStatus.ERROR -> {
+                        _topMovies.value = Resource.error(response.message ?: "Error desconocido", null)
+                    }
+                    ResourceStatus.LOADING -> {
+                        _topMovies.value = Resource.loading(null)
+                    }
                 }
             }
         }
     }
-
-
-
-
 }
