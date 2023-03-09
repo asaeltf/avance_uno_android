@@ -54,17 +54,20 @@ class PopularFragment : Fragment(), PopularMovieItemAdapter.OnMovieClickListener
                 super.onScrolled(recyclerView, dx, dy)
                 val layoutManager = recyclerView.layoutManager as LinearLayoutManager
                 val totalItemCount = layoutManager.itemCount
-                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
-                if (lastVisibleItem == totalItemCount - 1) {
+                val visibleItemCount = layoutManager.childCount
+                val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
+
+                if (visibleItemCount + firstVisibleItem >= totalItemCount && firstVisibleItem >= 0 && loading) {
+                    loading = true
                     Log.e("fetchPopularMovies", "El usuario llego al final de la lista y scroll")
-                    
+                    viewModel.loadNextPage()
                 }
             }
         })
 
 
 
-        viewModel.fetchPopularMovies.observe(viewLifecycleOwner, Observer {
+        viewModel.popularMovies.observe(viewLifecycleOwner, Observer {
             when (it.resourceStatus) {
                 ResourceStatus.LOADING -> {
                     Log.e("fetchPopularMovies", "Loading")
