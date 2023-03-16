@@ -64,6 +64,7 @@ class AnimationFragment : Fragment(), AnimationMovieItemAdapter.OnMovieClickList
                 val visibleItemCount = layoutManager.childCount
                 val firstVisibleItem = layoutManager.findFirstVisibleItemPosition()
 
+
                 if (visibleItemCount + firstVisibleItem >= totalItemCount && firstVisibleItem >= 0 && loading) {
                     loading = true
                     Log.e("fetchPopularMovies", "El usuario llego al final de la lista y scroll")
