@@ -7,8 +7,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.testandroid.ui.popular.PopularFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_popular" >
+        android:label="Peliculas Populares"
+        tools:layout="@layout/fragment_popular">
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -16,8 +16,8 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.testandroid.ui.detail.DetailFragment"
-        android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" >
+        android:label="Detalle de Pelicula"
+        tools:layout="@layout/fragment_detail">
         <argument
             android:name="movie"
             app:argType="com.example.testandroid.data.entities.MovieEntity" />
@@ -25,8 +25,8 @@
     <fragment
         android:id="@+id/topFragment"
         android:name="com.example.testandroid.ui.top.TopFragment"
-        android:label="fragment_top"
-        tools:layout="@layout/fragment_top" >
+        android:label="Peliculas Top"
+        tools:layout="@layout/fragment_top">
         <action
             android:id="@+id/action_topFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -34,8 +34,8 @@
     <fragment
         android:id="@+id/animationFragment"
         android:name="com.example.testandroid.ui.genere.AnimationFragment"
-        android:label="fragment_animation"
-        tools:layout="@layout/fragment_animation" >
+        android:label="Peliculas Animadas"
+        tools:layout="@layout/fragment_animation">
         <action
             android:id="@+id/action_animationFragment_to_detailFragment"
             app:destination="@id/detailFragment" />

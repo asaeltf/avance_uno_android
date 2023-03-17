@@ -29,17 +29,37 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Botones de navigacion
-        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottom_navigation)
         val navController = findNavController(R.id.nav_host_fragment_content_main)
-        val appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.topFragment, R.id.animationFragment))
+        appBarConfiguration = AppBarConfiguration(setOf(R.id.homeFragment, R.id.topFragment, R.id.animationFragment))
         setupActionBarWithNavController(navController, appBarConfiguration)
-        bottomNavigationView.setupWithNavController(navController)
+        binding.bottomNavigation.setupWithNavController(navController)
+
+        binding.bottomNavigation.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.homeFragment -> {
+                    // Acción cuando se selecciona la opción "Home"
+                    navController.navigate(R.id.homeFragment)
+                    true
+                }
+                R.id.topFragment -> {
+                    // Acción cuando se selecciona la opción "Top"
+                    navController.navigate(R.id.topFragment)
+                    true
+                }
+                R.id.animationFragment -> {
+                    // Acción cuando se selecciona la opción "Animation"
+                    navController.navigate(R.id.animationFragment)
+                    true
+                }
+                else -> false
+            }
+        }
 
     }
 
     override fun onSupportNavigateUp(): Boolean {
-        onBackPressed()
-        return true
+        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
-    }
+}
